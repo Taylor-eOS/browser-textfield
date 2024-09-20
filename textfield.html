@@ -11,37 +11,37 @@
   }
   #container {
     display: flex;
-    height: 100vh; /* Ensure the container fills the entire height of the viewport */
+    height: 100vh; 
     padding: 10px;
     box-sizing: border-box;
   }
   textarea {
     flex: 1;
-    resize: none; /* Disables resizing to ensure it's always 100% height */
+    resize: none; 
     margin-right: 10px;
     box-sizing: border-box;
   }
   #sidebar {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes #bottomContainer to the bottom */
-    height: calc(100% - 20px); /* Account for padding */
+    justify-content: space-between; 
+    height: calc(100% - 20px); 
   }
   #bottomContainer {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Aligns the children (buttons, input) to the right */
+    align-items: flex-end; 
   }
   #counters {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: auto; /* Pushes the find/replace fields to the middle */
+    margin-bottom: auto; 
   }
   #charCounter, #wordCounter, .button {
-    width: 60px; /* Width adjusted to make all elements similar */
+    width: 60px; 
     padding: 5px;
-    margin-bottom: 5px; /* Space between elements */
+    margin-bottom: 5px; 
     cursor: pointer;
     text-align: center;
     border: 1px solid #ddd;
@@ -49,34 +49,32 @@
   }
   #filename, #findText, #replaceText {
     width: 60px;
-    margin-bottom: 10px; /* Adds space between the input fields */
+    margin-bottom: 10px; 
   }
   .button, #filename {
-    margin-bottom: 10px; /* Adds more space between all buttons and input fields */
+    margin-bottom: 10px; 
   }
   #wordCounter {
-    margin-bottom: 20px; /* Adds extra space below the wordCounter element and above filename */
+    margin-bottom: 20px; 
   }
   #findReplaceContainer {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-bottom: auto; /* Positions the find/replace fields in the middle */
+    margin-bottom: auto; 
   }
 </style>
 <script>
 let charCountingEnabled = true;
 let wordCountingEnabled = true;
-let timeoutTime = 60000; // 1000ms is 1 second // this is disabled
+let timeoutTime = 60000; 
 
 function updateCounters() {
   var textarea = document.getElementById('textArea');
   let text = textarea.value.trim();
-  
   if (charCountingEnabled) {
     document.getElementById('charCounter').textContent = text.length;
   }
-  
   if (wordCountingEnabled) {
     let words = text.length > 0 ? text.split(/\s+/) : [];
     document.getElementById('wordCounter').textContent = words.length;
@@ -93,33 +91,33 @@ function toggleWordCounter() {
   updateCounters();
 }
 
-// Save text to file
 function saveToFile() {
   var text = document.getElementById('textArea').value;
-  var filename = document.getElementById('filename').value;
+  var filenameInput = document.getElementById('filename');
+  var filename = filenameInput.value;
   if (!filename) {
     filename = 'snippet';
   }
-  filename += '.txt'; // Append .txt to the filename
   var blob = new Blob([text], {type: 'text/plain'});
-
-  // Create an anchor element and trigger a download
   var downloadLink = document.createElement("a");
   downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = filename;
+  downloadLink.download = filename + '.txt';
   document.body.appendChild(downloadLink);
   downloadLink.click();
   document.body.removeChild(downloadLink);
+  var match = filename.match(/(.*?)(\d+)$/);
+  if (match) {
+    var base = match[1];
+    var number = parseInt(match[2], 10);
+    filenameInput.value = base + (number + 1);
+  }
 }
-
-var selectedCharCount = 0; // Variable to keep track of the selected character count
+var selectedCharCount = 0; 
 
 function updateSelectedCharCount() {
   selectedText = getSel();
-  // Update the button directly here
   document.getElementById('selectedCountBtn').textContent = "" + selectedText.length;
 }
-
 document.addEventListener('selectionchange', function() {
   var selectedText = getSel();
   var selectedCountBtn = document.getElementById('selectedCountBtn');
@@ -128,13 +126,9 @@ document.addEventListener('selectionchange', function() {
 });
 
 function getSel() {
-  // Obtain the object reference for the <textarea>
   var txtarea = document.getElementById("textArea");
-  // Obtain the index of the first selected character
   var start = txtarea.selectionStart;
-  // Obtain the index of the last selected character
   var finish = txtarea.selectionEnd;
-  // Obtain the selected text
   var sel = txtarea.value.substring(start, finish);
   return sel;
 }
@@ -148,8 +142,14 @@ function replaceText() {
   textArea.value = newText;
   updateCounters();
 }
-
 </script>
+</head>
+<head>
+<style>
+  #textArea {
+    font-size: 16px; 
+  }
+</style>
 </head>
 <body>
 <div id="container">
